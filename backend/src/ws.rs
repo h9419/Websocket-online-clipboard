@@ -7,7 +7,7 @@ use warp::ws::{Message, WebSocket};
 
 use serde::{Deserialize, Serialize};
 use serde_json::Result;
-Jim
+
 #[derive(Serialize, Deserialize)]
 struct Action<'a> {
     r#type: &'a str,
@@ -21,8 +21,7 @@ pub async fn client_connection(ws: WebSocket, clients: Clients, message_history:
     let (client_sender, client_rcv) = mpsc::unbounded_channel();
     let client_rcv = UnboundedReceiverStream::new(client_rcv);
 
-    tokio::task::spawn(client_rcv.forward(client_ws_sender).map(
-       | result | {
+    tokio::task::spawn(client_rcv.forward(client_ws_sender).map(|result| {
         if let Err(e) = result {
             println!("error sending websocket msg: {}", e);
         }
@@ -63,7 +62,6 @@ async fn client_msg(
     #[cfg(not(debug_assertions))]
     println!("received message from {}", client_id);
 
-
     if let Ok(json_data) = msg.to_str() {
         let Action { r#type, data } = serde_json::from_str(json_data)?;
         match r#type {
@@ -72,17 +70,18 @@ async fn client_msg(
                     if let Some(sender) = &client.sender {
                         // send most recent message to new client
                         println!("sending to client: {}", client_id);
-                        let _ = sender.send(Ok(Message::text(message_history.lock().await.clone())));
+                        let _ =
+                            sender.send(Ok(Message::text(message_history.lock().await.clone())));
                     }
                 }
-            },
+            }
             "update" => {
                 // save to history
                 if let Some(message) = data {
                     *(message_history.lock().await) = message.clone();
                     propagate_msg(Message::text(message), &clients).await;
                 }
-            },
+            }
             "clear" => {
                 let message = String::from("");
                 *(message_history.lock().await) = message.clone();
@@ -94,10 +93,7 @@ async fn client_msg(
     Ok(())
 }
 
-async fn propagate_msg(
-    msg: Message,
-    clients: &Clients,
-) {
+async fn propagate_msg(msg: Message, clients: &Clients) {
     // propagate it out
     let locked = clients.lock().await.clone();
     for (key, value) in locked.into_iter() {
