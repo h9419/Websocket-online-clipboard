@@ -8,7 +8,7 @@ There has since been more comprehensive examples in [their subsequent posts](htt
 
 This project is a simplistic singleton clipboard that updates real time online across multiple clients. This is more so an exercise in memory-safe and high performance json parsing and working with the borrow checker in Rust. There are many quality of life improvements I can perform but this is just a short exercise.
 
-Feel free to visit the demo on https://localhost/clipboard/ and leave a message. I don't even log the messages
+Feel free to visit the demo on https://harrytsangprivate.csproject.org/clipboard/ and leave a message. I don't even log the messages
 
 ## Important Folders
 - backend: A Rust websocket backend on ws://localhost:8000/ws and static http server on http://localhost:8000/clipboard
