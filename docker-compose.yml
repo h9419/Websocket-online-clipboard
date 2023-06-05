@@ -1,0 +1,8 @@
+services:
+    online-clipboard:
+        image: online-clipboard:${TAG:-latest}
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+        - "8000:8000"
