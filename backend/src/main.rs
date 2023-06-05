@@ -26,10 +26,10 @@ async fn main() {
         .and(with_clients(clients.clone()))
         .and(with_message_history(message_history.clone()))
         .and_then(handlers::ws_handler)
-        .with(warp::cors().allow_origin("http://localhost"));
+        .with(warp::cors().allow_any_origin());
     let static_route = warp::path("clipboard")
         .and(warp::fs::dir("/workspace/static"))
-        .with(warp::cors().allow_origin("http://localhost"));
+        .with(warp::cors().allow_any_origin());
 
     let routes = ws_route.or(static_route);
     println!("Starting server");
