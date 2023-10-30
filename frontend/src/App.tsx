@@ -31,7 +31,7 @@ function App() {
     dispatch({ type: "update", data: value });
 
   useEffect(() => {
-    websocket.current = new w3cwebsocket(`ws://${window.location.host}/ws`);
+    websocket.current = new w3cwebsocket(`${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws`);
     websocket.current.onopen = () => dispatch({ type: "get" });
     websocket.current.onmessage = (message: IMessageEvent) => {
       setMessage(message.data.toString());
